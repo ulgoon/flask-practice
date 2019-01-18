@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+ <head>
+  <meta charset="utf-8">
+  <title>Flask!!!!!!</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+ </head>
+ <body>
+  <header>
+   <h1>Let's make Flask</h1>
+   <ul>
+    <li><a href="{{ url_for('index') }}">Home</a></li>
+    <li><a href="{{ url_for('user') }}">User</a></li>
+    <li><a href="{{ url_for('users') }}">Users</a></li>
+    <li><a href="{{ url_for('movies') }}">Movies</a></li>
+   </ul>
+  </header>
+  <div>
+    {% block body %}
+    {% endblock %}
+  </div>
+  <footer>
+  </footer>
+ </body>
+</html>

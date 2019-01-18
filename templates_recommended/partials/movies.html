@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <h1>Movies</h1>
+  <div id="form-movies">
+   <form id="post-movie" action="{{ url_for('movies') }}" method="POST">
+    <div>
+     <label>
+      Name
+      <input type="text" name="movie-name" id="movie-name">
+     </label>
+    </div>
+    <div>
+     <label>
+      Year
+      <input type="text" name="movie-year" id="movie-year">
+     </label>
+    </div>
+    <div>
+     <label>
+      Studio
+      <input type="text" name="movie-studio" id="movie-studio">
+     </label>
+    </div>
+    <div>
+     <label>
+      <input type="submit" name="submit" value="등록하기" id="submit">
+     </label>
+    </div>
+   </form>
+   <p id="msg">{{ msg }}</p>
+  </div>
+  <a href="{{ url_for('movies') }}"><button value="refresh">Refresh</button></a>
+  <table id="movies-table">
+   <thead>
+    <tr>
+     <th>id</th>
+     <th>name</th>
+     <th>year</th>
+     <th>studio</th>
+    </tr>
+   </thead>
+   <tbody>
+    {% for row in rows %}
+     <tr>
+         <td>{{ row["id"] }}</td>
+         <td>{{ row["name"] }}</td>
+         <td>{{ row["year"] }}</td>
+         <td>{{ row["studio"] }}</td>
+     </tr>
+    {% endfor %}
+   </tbody>
+  </table>
+{% endblock %}
