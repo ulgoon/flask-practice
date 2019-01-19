@@ -1,9 +1,9 @@
-from flask import Flask, render_template,request
+from flask import Flask, render_template, request, jsonify
 import requests
 from time import ctime
 from bs4 import BeautifulSoup
 import sqlite3 as lite
-
+from pymongo import MongoClient
 
 app = Flask(__name__)
 
@@ -89,6 +89,27 @@ def movies():
 #@app.route('/api/v1/items')
 #def get_item():
     #return은 json 타입으로!!
+
+mongo_uri = "mongodb://strongadmin:admin1234@ds135844.mlab.com:35844/mydbinstance"
+
+@app.route('/api/v1/item')
+def api():
+    client = MongoClient(mongo_uri)
+    db = client.mydbinstance
+    items = db.bigbang
+    try:
+        query = {}
+        projection= {
+                "_id":0,
+                "title":1,
+                "item":1,
+                }
+        result = list(items.find(query, projection))
+    except:
+        result = "failed"
+    finally:
+        return jsonify({"items":result})
+
 
 if __name__=='__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
