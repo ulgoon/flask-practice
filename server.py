@@ -9,11 +9,6 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    """
-    main page 라우트
-    페이지 접속요청시 n사 실시간 키워드를 requests, BeautifulSoup를 활용하여
-    수집 한 뒤, 응답으로 수행 시간과 키워드를 반환
-    """
     naver_uri = "https://www.naver.com/"
     executed_time = ctime()
     naver_html = requests.get(naver_uri).text
@@ -26,27 +21,15 @@ def index():
 
 @app.route('/user/<string:name>')
 def user(name=None):
-    """
-    user의 path로 어떤 문자열 입력시 그 문자열을 응답의 msg로 반환하여 템플리팅에 참조
-    """
     return render_template('user.html', msg=name)
 
 @app.route('/users')
 def users():
-    """
-    /users?uid=1234&upw=1q2w3e4r 에서
-    요청의 arguments를 수집하여 쿼리스트링을 응답의 rows로 반환
-    """
     keywords = request.args
     return render_template('users.html', rows=keywords )
 
 @app.route('/movies', methods=["GET","POST"])
 def movies():
-    """
-    movies의 method가 get일 경우 data.db의 모든 자료를 선택하여 반환.
-    위 users,user 사례와 조합시 조건을 부여하는데 사용가능
-    movies의 method가 post일 경우 사용자가 form 태그에서 입력한 값을 data.db에 입력
-    """
     if request.method == "GET":
         try:
             conn = lite.connect('./data/data.db')
@@ -84,32 +67,26 @@ def movies():
         finally:
             return render_template('movies.html', msg=msg)
 
-# TODO: mlab의 bigbang collections 에 접근하여 모든 아이템 출력하기
-
-#@app.route('/api/v1/items')
-#def get_item():
-    #return은 json 타입으로!!
 
 mongo_uri = "mongodb://strongadmin:admin1234@ds135844.mlab.com:35844/mydbinstance"
 
-@app.route('/api/v1/item')
-def api():
+@app.route('/api/v1/items')
+def get_item():
     client = MongoClient(mongo_uri)
     db = client.mydbinstance
     items = db.bigbang
     try:
         query = {}
-        projection= {
+        projection = {
                 "_id":0,
-                "title":1,
                 "item":1,
+                "title":1,
                 }
         result = list(items.find(query, projection))
     except:
-        result = "failed"
+        result = "Failed"
     finally:
         return jsonify({"items":result})
-
 
 if __name__=='__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
